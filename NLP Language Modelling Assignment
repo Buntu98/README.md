@@ -1,0 +1,59 @@
+# Language Identification Project
+
+## Author
+Buntu Noganta
+
+## Project Description
+This project identifies language using trigram frequency analysis. It trains on text files for Xhosa, English, Dutch, Zulu, and Afrikaans, then predicts language for unseen text.
+
+## Data
+`data.zip` contains training, validation, and test datasets. Extract it to `/content/data/data/`.
+
+### Data Files:
+*   `train.xh.txt`, `train.en.txt`, `train.nl.txt`, `train.zu.txt`, `train.af.txt`
+*   `val.xh.txt`, `val.en.txt`, `val.nl.txt`, `val.zu.txt`, `val.af.txt`
+*   `test.lid.txt`
+
+## Model Overview
+
+The model involves:
+1.  **Text Normalization**: Lowercases, normalizes Unicode, removes non-alphanumeric characters.
+2.  **Trigram Extraction**: Generates three-character sequences.
+3.  **Model Training**: Creates trigram frequency distributions per language.
+4.  **Language Prediction**: Calculates log-probabilities against language models to predict the best fit.
+5.  **Validation**: Evaluates accuracy on a separate validation set.
+
+## Dependencies
+Standard Python packages:
+*   `zipfile`, `os`, `re`, `unicodedata`, `math`
+*   `collections` (`Counter`, `defaultdict`)
+*   `pathlib` (`Path`)
+*   `numpy`, `random` (for text generation)
+*   `matplotlib.pyplot` (for plotting)
+*   `IPython.utils.text` (for utility functions)
+
+## Setup and Usage
+
+1.  **Extract Data**: Ensure `data.zip` is extracted to `/content/data/data`.
+2.  **Run the Notebook**: Execute all cells in the notebook.
+    *   Go to 'Runtime' > 'Run all' in the Colab menu.
+    *   Alternatively, run cells sequentially using `Shift + Enter` or the 'Play' button next to each cell.
+    *   The notebook will load packages, define functions, train models, validate performance, predict on test data, and demonstrate text generation.
+
+## Results
+
+Outputs include:
+*   Training statistics (unique/total trigrams).
+*   Validation accuracy (per-language and overall).
+*   `test_predictions.txt` (predicted languages).
+*   Perplexity matrix (model fit across languages).
+*   Confusion matrix (model performance visualization).
+*   BPE vocabulary overlap analysis.
+
+## Text Generation
+
+New functionality generates text using trained language models:
+1.  **`build_conditional_model`**: Creates a conditional probability model from trigram frequencies.
+2.  **`generate_text`**: Generates text using the conditional model, with parameters for `length`, `seed_text`, and `temperature`.
+
+Example usage is in the main execution block (`if __name__ == "__main__":`) for English, Afrikaans, Xhosa, and Dutch text generation.

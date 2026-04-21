@@ -1,80 +1,35 @@
-# README: Deep Generative models Assignment 1
-## Overview
+# Score-Based Generative Models (Diffusion Models)
 
-This project demonstrates autoregressive and normalizing flow models using PyTorch. It covers:
+This notebook implements a score-based generative model, also known as a diffusion model, for both unconditional and conditional data generation. The core idea is to learn the score function (gradient of the log-probability density) of data perturbed by noise at various levels, and then use this learned score function to reverse the diffusion process to generate new data samples.
 
-- MADE (Masked Autoencoder for Distribution Estimation) – for modeling binary MNIST and 2D synthetic datasets.
-- MADE with Gaussian Mixture Conditionals – for modeling 2D synthetic moon datasets.
-- RealNVP (Normalizing Flows) – for density estimation and sampling from 2D datasets.
-- Visualization of densities and samples for qualitative evaluation.
+## Project Description
 
-The code is implemented to run end-to-end in Google Colab or any Python environment with PyTorch.
+This project explores the training and sampling mechanisms of score-based generative models. It demonstrates:
 
-## Requirements
-- Python 3.8+
-- PyTorch
-- torchvision
-- numpy
-- matplotlib
-- scikit-learn
+1.  **Unconditional Score Model (VE-SDE)**: Training a `ScoreNet` to model the score function of a noisy data distribution (specifically, the pinwheel dataset) and generating new samples using an ancestral sampler.
+2.  **Conditional Score Model (VE-SDE) with Classifier-Free Guidance (CFG)**: Extending the unconditional model to a `CondScoreNet` that can generate samples conditioned on a class label. This model is trained with label dropout and utilizes Classifier-Free Guidance during sampling to improve sample quality and alignment with conditioning.
 
-You can install dependencies with:
+## Packages to Install
 
-pip install torch torchvision numpy matplotlib scikit-learn
+To run this notebook, the following Python package needs to be installed:
 
-## Project Structure
-- MNIST binary MADE
-- Loads MNIST digits 0 and 1, resizes to 16×16, and binarizes.
-- Trains a MADE model to learn the Bernoulli distribution of pixels.
-- Includes compute_nll to evaluate test negative log-likelihood.
-- Generates and visualizes 16 sample images from the trained model.
-- 2D Moons Dataset with MADE
-- Generates synthetic 2D moon-shaped data.
-- Trains a simple autoregressive MADE and MADE with Gaussian Mixture conditionals.
-- Visualizes density and samples.
-- RealNVP (Normalizing Flows)
-- Implements a RealNVP model with affine coupling layers.
-- Trains on the synthetic 2D dataset using reverse KL divergence.
-- Evaluates log-likelihood, plots density, and samples points from the learned distribution.
-- Unnormalised Density and Reverse KL
-- Defines an unnormalised 2D Gaussian mixture density.
-- Trains RealNVP using reverse KL divergence between model and target distribution.
-## Usage
+*   `torchdiffeq`: Used for solving differential equations, which can be part of advanced SDE sampling methods.
 
-Load MNIST and train MADE:
+You can install it using pip:
 
-model = MADE(input_dim=256, hidden_dim=1024)
+```bash
+!pip install torchdiffeq
+```
 
-Generate samples:
+## Key Imports
 
-samples = sample(model, n_samples=16)
-plt.imshow(samples[0][0], cmap='gray')
+The following libraries are extensively used throughout the notebook:
 
-Train on synthetic moons dataset:
-
-X, y = make_moons(n_samples=1000, noise=0.1)
-model = SimpleMADE(hidden=32)
-
-Train RealNVP and visualize density:
-
-model = RealNVP()
-
-samples = model.sample(5000)
-
-## Key Functions
-MaskedLinear – Linear layer with an autoregressive mask.
-MADE – Autoregressive model for high-dimensional binary data.
-SimpleMADE / MADE_MoG – For 2D regression with Gaussian and Gaussian mixture conditionals.
-RealNVP – Flow-based model for invertible transformations and density estimation.
-compute_nll – Compute negative log-likelihood for model evaluation.
-sample – Generate new samples from the trained model.
-unnormalised_log_p – Defines target unnormalised 2D distribution for reverse KL training.
-
-## Visualization
-
-The project generates:
-
-Samples from binary MNIST after MADE training.
-Density plots and sample points for 2D synthetic datasets.
-Contour plots of RealNVP-fitted densities.
-Comparison between true data and generated samples.
+*   `sys`: Standard system-specific parameters and functions.
+*   `numpy as np`: For numerical operations, especially data generation.
+*   `torch`: The primary deep learning framework.
+*   `torch.nn as nn`: For building neural network architectures.
+*   `torch.nn.functional as F`: For common neural network operations.
+*   `matplotlib.pyplot as plt`: For plotting and visualization.
+*   `torch.utils.data.DataLoader`: For efficient batching of data during training.
+*   `torch.utils.data.TensorDataset`: For wrapping tensors into a dataset format.
